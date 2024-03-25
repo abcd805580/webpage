@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import './App.css'; // 引入CSS樣式檔案
 
 function App() {
+  const [textInput, setTextInput] = useState({ name: '', message: '' });
+  const [comments, setComments] = useState([]);
+
+  const handleTextInputChange = ({ target: { name, value } }) => {
+    setTextInput(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    setComments(prev => [...prev, textInput]);
+    setTextInput({ name: '', message: '' });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container">
+      <form onSubmit={handleFormSubmit} className="comment-form">
+        <input
+          name="name"
+          value={textInput.name}
+          onChange={handleTextInputChange}
+          placeholder="Your Name"
+          className="input-field"
+        />
+        <input
+          name="message"
+          value={textInput.message}
+          onChange={handleTextInputChange}
+          placeholder="Your Message"
+          className="input-field"
+        />
+        <input type="submit" value="Submit" className="submit-button" />
+      </form>
+      <div className="comments-section">
+        {comments.map((comment, index) => (
+          <div key={index} className="comment">
+            {comment.name}: {comment.message}
+          </div>
+        ))}
+      </div>
     </div>
   );
+
 }
 
 export default App;
